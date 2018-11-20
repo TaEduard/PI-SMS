@@ -3,7 +3,7 @@ package main
 import (
         "fmt"
         "log"
-        // "strconv"
+        "strconv"
         "os/exec"
         
         "github.com/streadway/amqp"
@@ -63,10 +63,12 @@ func main() {
         forever := make(chan bool)
 
         go func() {
+                i:=0
                 for d := range msgs {
                         // n, err := strconv.Atoi(string(d.Body))
                         // failOnError(err, "Failed to convert body to integer")
-                        log.Printf(string(d.Body))
+                        i++
+                        log.Printf(string(d.Body), strconv.Itoa(i))
                         // log.Printf(" [.] fib(%d)", n)
                         response := execute(string(d.Body))
 

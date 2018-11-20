@@ -2,12 +2,14 @@
 		"Identifier": "clientid",
 		"commands": [
 			 {
-				"command_name": "CPU-Scan",
-				"command": "smth"
+				"command-name": "CPU-Scan",
+				"command": "smth",
+				"command-output":""
 			},
 			{
-				"command_name": "network-usage",
-				"command": "smth2"
+				"command-name": "network-usage",
+				"command": "smth2",
+				"command-output":""
 			}
 		]
 }
