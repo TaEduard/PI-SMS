@@ -1,0 +1,14 @@
+{
+	"_comment": "Freq should be in seconds",
+	"Freq": 4,
+		"Commands": [
+			 {
+				"CommandName": "Directory-Scan",
+				"Command": "ls"
+			},
+			{
+				"CommandName": "network-usage",
+				"Command": "df -h"
+			}
+		]
+}

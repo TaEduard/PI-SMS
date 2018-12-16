@@ -8,8 +8,17 @@ import (
 )
 
 //"amqp://guest:guest@localhost:5672/"
+func CheckAMQP_URL() (amqp string) {
+	amqp = os.Getenv("AMQP_URL")
+	if amqp != "" {
+		return amqp
+	} else {
+		return "amqp://guest:guest@localhost:5672/"
+	}
+}
+
 func RPCcommand(command string) (res string, err error) {
-	conn, err := amqp.Dial(os.Getenv("AMQP_URL"))
+	conn, err := amqp.Dial(CheckAMQP_URL())
 	utils.FailOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 	ch, err := conn.Channel()

@@ -1,4 +1,4 @@
-package main
+package config_parser
 
 import (
 	"encoding/json"
@@ -7,23 +7,27 @@ import (
 	"os"
 )
 
-func main() {
+type ConfigStruct struct {
+	Freq     int
+	Commands []CommandStruct
+}
 
-	// Open our jsonFile
-	jsonFile, err := os.Open("config.json")
-	// if we os.Open returns an error then handle it
+type CommandStruct struct {
+	CommandName string
+	Command     string
+}
+
+func Parse_config(config string) ConfigStruct {
+	jsonFile, err := os.Open(config)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println("Successfully Opened config.json")
-	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	var result map[string]interface{}
+	var result ConfigStruct
 	json.Unmarshal([]byte(byteValue), &result)
 
-	fmt.Println(result)
-
+	return result
 }

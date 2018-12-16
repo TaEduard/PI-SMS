@@ -1,14 +1,16 @@
 package main
 
 import (
-	"os"
+	"fmt"
+	"time"
 
 	"github.com/streadway/amqp"
+	"github.com/taeduard/PI-SMS/rabbitmq_rpc"
 	"github.com/taeduard/PI-SMS/utils"
 )
 
 func main() {
-	conn, err := amqp.Dial(os.Getenv("AMQP_URL"))
+	conn, err := amqp.Dial(rabbitmq_rpc.CheckAMQP_URL())
 	utils.FailOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 	ch, err := conn.Channel()
@@ -39,13 +41,15 @@ func main() {
 		nil,    // args
 	)
 	utils.FailOnError(err, "Failed to register a consumer")
-
 	forever := make(chan bool)
 	go func() {
 		i := 0
 		for d := range msgs {
 			i++
+			time := time.Now().UTC()
 			response := utils.Execute(string(d.Body))
+			hostname := utils.Execute("hostname")
+			// fmt.Printf("%s\n:\n%s:\n%s", time.String(), hostname, response)
 			err := ch.Publish(
 				"",        // exchange
 				d.ReplyTo, // routing key
@@ -54,7 +58,7 @@ func main() {
 				amqp.Publishing{
 					ContentType:   "text/plain",
 					CorrelationId: d.CorrelationId,
-					Body:          []byte(response),
+					Body:          []byte(fmt.Sprintf("%s\n;\n%s;\n%s", time.String(), hostname, response)),
 				})
 			utils.FailOnError(err, "Failed to publish a message")
 			d.Ack(false)
